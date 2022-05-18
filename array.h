@@ -7,9 +7,9 @@
 
 template <typename T>
 class ArrayList {
-    T* tab;
-    int msize; // najwieksza mozliwa liczba elementow
-    int last; // pierwsza wolna pozycja
+    T* tab;  // the pointer to array
+    int msize; // max number of elements in array
+    int last; // the first empty position in array
 public:
     ArrayList(int s = 10) : msize(s), last(0) {
         tab = new T[s];
@@ -72,37 +72,27 @@ public:
     // usage:   list2 = std::move(list1);
     bool empty() const { return last == 0; } // checks if the container has no elements
     bool full() const { return last == msize; } // *///checks if the container is full
-    int size() const { return last; } // liczba elementow na liscie
-    int max_size() const { return msize; } // najwieksza mozliwa liczba elementow
-    void push_front(const T& item); // dodanie na poczatek
-    void push_front(T&& item); //dodanie na poczatek
-    void push_back(const T& item); // dodanie na koniec
-    void push_back(T&& item); //  dodanie na koniec
-    T& front(); // zwraca poczatek, nie usuwa, error dla pustej listy
-    T& back(); // zwraca koniec, nie usuwa, error dla pustej listy
-    void pop_front(); // usuwa poczatek, error dla pustej listy
-    void pop_back(); // usuwa koniec, error dla pustej listy
-    void clear(); // czyszczenie listy z elementow
-    void reverse(); // odwracanie kolejnosci
-    void sort(); // sortowanie listy
+    int size() const { return last; } // returns number of elements in array
+    int max_size() const { return msize; } // returns max number of elements in array
+    void push_front(const T& item); // adds an element at the front
+    void push_front(T&& item); //adds an element at the front
+    void push_back(const T& item); // adds an item to the end
+    void push_back(T&& item); //  adds an item to the end
+    T& front(); // returns the first element, does not delete, error if array is empty
+    T& back(); // returns the last element, does not delete, error if array is empty
+    void pop_front(); // delete first element, error if array is empty
+    void pop_back(); // delete last element, error if array is empty
+    void clear(); // deletes array from all elements
+    void reverse(); // reverse the order of array 
+    void sort(); // sorts array
     void merge(ArrayList& other); //  merges two sorted lists into one
-    // Operacje z indeksami.
-    int erase(int pos); // return Iterator following the last removed element,
-    // czyli u mnie pos, bo ten element za usunietym sie przesunie na pos;
-    // ale jak usune ostatni, to chyba powinien zwrocic -1 (niewlasciwy indeks)
-    //
-    // https://en.cppreference.com/w/cpp/language/operators
-    // Array subscript operator
-    T& operator[](int pos); // podstawienie L[pos]=item
-    const T& operator[](int pos) const; // odczyt L[pos]
-    int index(const T& item); // jaki index na liscie (-1 gdy nie ma)
-    int insert(int pos, const T& item);
-   // int insert(int pos, T&& item); // inserts item before pos,
-    // Jezeli pos=0, to wstawiamy na poczatek.
-    // Jezeli pos=size(), to wstawiamy na koniec.
-    // zwraca pozycje wstawionego elementu
-    // zwraca pozycje wstawionego elementu
-   // */
+    
+    int erase(int pos); // return Iterator following the last removed element, removes element tab[pos]
+    T& operator[](int pos); //  L[pos]=item
+    const T& operator[](int pos) const; // L[pos]
+    int index(const T& item); // return index of element in array (-1 when does not ocurr)
+    int insert(int pos, const T& item); //inserts item before pos
+  
     friend std::ostream& operator<<(std::ostream& os, const ArrayList& L) {
         os << "[";
         for (int i=0; i < L.last; ++i) { // odwolanie L.last
@@ -118,7 +108,7 @@ template <typename T>
 void ArrayList<T>::push_front(const T& item) {
     if(last+1 > msize)
     {
-        std::cout<< "Lista jest przeplniona. Nie mozna dodac noweych elementow.";
+        std::cout<< "Array list is full. Cannot add new element.";
         return;
     }
     if (last == 0){
@@ -139,7 +129,7 @@ template <typename T>
 void ArrayList<T>::push_front(T&& item){
     if(last+1 > msize)
     {
-        std::cout<< "Lista jest przeplniona. Nie mozna dodac noweych elementow.";
+        std::cout<< "Array list is full. Cannot add new element.";
         return;
     }
     if (last == 0){
@@ -162,7 +152,7 @@ void ArrayList<T>::push_back(const T& item)
 {
     if(last+1 > msize)
     {
-        std::cout<< "Tablica jest przeplniona. Nie mozna dodac noweych elementow.";
+        std::cout<< "Array list is full. Cannot add new element.";
         return;
     }
     if (last == 0){
@@ -178,7 +168,7 @@ template <typename T>
 void ArrayList<T>::push_back(T &&item) {
     if(last+1 > msize)
     {
-        std::cout<< "Tablica jest przeplniona. Nie mozna dodac noweych elementow.";
+        std::cout<< "Array list is full. Cannot add new element.";
         return;
     }
     if (last == 0){
@@ -193,7 +183,7 @@ template <typename T>
 void ArrayList<T>::pop_front()
 {
     if(empty())
-        std::cout<<"Lista jest pusta!"<<std::endl;
+        std::cout<<"Array list is empty!"<<std::endl;
 
     else
     {
@@ -206,7 +196,7 @@ void ArrayList<T>::pop_front()
 template <typename T>
 void ArrayList<T>::pop_back() {
     if(empty())
-        std::cout<<"Lista jest pusta"<<std::endl;
+        std::cout<<"Array list is empty!"<<std::endl;
     else
     {
         last --;
@@ -215,7 +205,7 @@ void ArrayList<T>::pop_back() {
 template <typename T>
 void ArrayList<T>::clear() {
     if(empty())
-        std::cout<<"Lista jest pusta!"<<std::endl;
+        std::cout<<"Array list is empty!"<<std::endl;
 
     else
     {
@@ -225,7 +215,7 @@ void ArrayList<T>::clear() {
 template <typename T>
 void ArrayList<T>::reverse() {
     if(empty())
-        std::cout<<"Lista jest pusta!"<<std::endl;
+        std::cout<<"Array list is empty!"<<std::endl;
     else if(size()==1)
         return;
 
@@ -245,7 +235,7 @@ template <typename T>
 void ArrayList<T>::sort() {
 
     if(empty()) {
-        std::cout << "Lista jest pusta!" << std::endl;
+        std::cout << "Array list is empty!" << std::endl;
         return;
     }
     else {
